@@ -1,0 +1,86 @@
+<html>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <head>
+        <title>Testing Chatbot website</title></head>
+    <body>
+
+
+        <div class="container alert-primary col-12 col-sm-12 my-5 py-5">
+            <div class="col-6 col-sm-8">
+				Hi! I am your learning assistant. Now please select the interested thesaurus number</br><b>(0 for GMAT, 1 for GRE, 2 for TOF)</b>
+            </div>            
+            <hr>
+            <div class="row">
+            <div class="col-6 col-sm-8">
+                Enter your interested thesaurus:<br>
+            </div>
+            <div class="col-6 col-sm-4">
+                <input type="text" id="inputArea"/>
+            </div>
+			<div id="wordholder" class="col-12 col-sm=12" style="display:none">
+				Let get started: 
+				<b id='word'></b></br>
+                    If you know this word, please click yes, If not, click no
+                    <input class="button" type="button" value="Yes" id="yes">
+                    <input class="button" type="button" value="No" id="no">	
+			</div>
+		</div>
+        </div>
+    </body>
+    <script>
+        $(function(){
+			var tmp = "";
+	$('#inputArea').change(function(){
+		$.ajax({
+			url: 'http://127.0.0.1:5000/callback',
+			data: $('#inputArea').val(),
+			type: 'POST',
+			success: function(response){
+                console.log("OK: " + response);
+                //var obj = JSON.parse(response);
+				tmp = response;
+                console.log(response);
+                $('#word').text(response['a']);
+                $('#wordholder').css("display","block");
+
+			},
+			error: function(error){
+                console.log("Error: " + error.text());
+                $('#reply').text("Error");
+			}
+		});
+	});
+
+	var count = 1;
+	var ye = 0;
+	var n = 0;
+	
+    $('.button').click(function(){
+	    var lis = new Array();
+	    for(key in tmp){
+	        item = tmp[key];
+			lis.push(item);
+	    }
+        if(this.id == "yes"){
+            ye += 1;
+        }
+        if(this.id == "no"){
+            n += 1;
+        }
+		console.log(count);
+		$('#word').text(lis[count]);
+		if (count>=5){
+			alert("You know " + ye + " words and you did not know " + n + " words");
+		}
+		count += 1
+    });
+
+	
+	
+	
+});
+    </script>
+</html>
