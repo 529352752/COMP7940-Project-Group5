@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+			background-color: rgb(40, 95, 116);
+			background-size: cover;
+			height: 100%;
+			width: 100%;
+		}
+
+        .navigator ul{
+			background-color: rgba(179,179,179,0.4);
+			list-style-type: none;
+			margin: 0;
+			padding:0;
+			width: 100%;
+			overflow: hidden;
+		}
+		.navigator li{
+			float: left;
+			display: block;
+			width: 50%;
+		}
+		.navigator li a{
+			display: block;
+			color: rgba(255,255,255,0.8);
+			text-align: center;
+			font-size: 30px;
+			margin-top: 1%;
+			margin-bottom: 1%;
+		}
+
+    </style>
+    <script>
+        $(document).ready(function(){
+		$.ajax({
+			url: 'http://127.0.0.1:5000/news',
+			type: 'GET',
+			success: function(response){
+                console.log("OK: " + response);
+                console.log(response);
+                for(i=0;i<response["news"].length;i++){
+                    $("#news").append("<p style=\"color: white\">"+response["news"][i]["pubDate"]+"</p>");
+                    $("#news").append("<p style=\"color: white\">"+response["news"][i]["pubDateStr"]+"</p>");
+                    $("#news").append("<p style=\"color: white\">"+response["news"][i]["title"]+"</p>");
+                    $("#news").append("<p style=\"color: white\">"+response["news"][i]["summary"]+"</p>");
+                    $("#news").append("<p style=\"color: white\">"+response["news"][i]["infoSource"]+"</p>");
+                    $("#news").append("<p style=\"color: white\">"+response["news"][i]["sourceUrl"]+"</p>");
+                    $("#news").append("<hr>");
+                }
+
+            },
+
+			error: function(error){
+                console.log("Error: " + error.text());
+                $('#reply').text("Error");
+			}
+            
+        });
+        });
+        </script>
+</head>
+<body>
+    <div class="navigator">
+        <ul>
+             <li id="Home"><a href="values.html">Test</a></li>
+            <li><a href="News.html">News</a></li>
+        </ul>
+    </div>
+    <div style="margin: 2% 2% 2% 2%" id="news">
+    </div>
+</body>
+</html>
