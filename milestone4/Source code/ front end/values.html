@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+		body {
+			background-image: url("1.png");
+			background-size: cover;
+			height: 100%;
+			width: 100%;
+		}
+		.navigator ul{
+			background-color: rgba(179,179,179,0.4);
+			list-style-type: none;
+			margin: 0;
+			padding:0;
+			width: 100%;
+			overflow: hidden;
+		}
+		.navigator li{
+			float: left;
+			display: block;
+			width: 33%;
+		}
+		.navigator li a{
+			display: block;
+			color: rgba(255,255,255,0.8);
+			text-align: center;
+			font-size: 30px;
+			margin-top: 1%;
+			margin-bottom: 1%;
+		}
+		.main-HomePage {
+            position: absolute;
+            padding: 0;
+            margin: 0;
+            background-color: rgba(255,255,255,0.5);
+            height: 80%;
+            width: 80%;
+            left: 10%;
+            top: 15%;
+		}
+		.main-HomePage #HomePage-title{
+			text-align: center;
+			font-size: 75px;
+			font-family:"Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";
+			margin-top: 8%;
+			color: rgb(50,50,50);
+		}
+		.main-HomePage #HomePage-description{
+			text-align: center;
+			font-size: 25px;
+			font-family:"Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";
+			color: rgb(50,50,50);
+			margin-left: 10%;
+			margin-right: 10%;
+		}
+		.main-HomePage #HomePage-button{
+			background-color: rgba(131,131,131,0.8);
+			color: rgba(255,255,255,0.8);
+			font-size: 30px;
+			font-family:"Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";
+			border:none;
+			margin-left: 30%;
+			margin-top: 3%;
+			width: 40%;
+            line-height: 150%;
+            height: 20%;
+			cursor: pointer;
+		}
+		.main-questionPage{
+			position: absolute;
+			padding: 0;
+			margin: 0;
+			background-color: #FFFFFF;
+			height: 70%;
+			width: 80%;
+			left: 10%;
+			top: 15%;
+			display: none;
+			overflow: auto;
+		}
+		.main-questionPage p{
+			height: 40px;
+			margin-bottom: 2%;
+			margin-top: 2%;
+			margin-left: 20%;
+			font-size: 25px;
+			font-family:"Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";
+			text-align: left;
+			width: 80%
+		}
+
+		.main-questionPage input {
+			float: left;
+			font-size: 20px;
+			text-align: center;
+			margin-left: 20%;
+			font-family:"Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";
+			color: darkgray;
+		}
+		
+	</style>
+	<script>
+	$(document).ready(function(){
+		$.ajax({
+			url: 'https://bot7940.herokuapp.com/callback',
+			//data: $('#inputArea').val(),
+			type: 'GET',
+			success: function(response){
+                console.log("OK: " + response);
+                console.log(response);
+
+				for(var key in response){
+					$("#questions").append("<p class='"+key.split("-")[1]+"'>"+key.split("-")[0]+"</p>");
+					allanswers = response[key].split("-")
+					for(i=0;i<allanswers.length;i++){
+						$("#questions").append("<input name='" + key.split("-")[1] + "' type=\"radio\"><span>" + allanswers[i] + "</span><br>");	
+					}
+				}
+
+			},
+			error: function(error){
+                console.log("Error: " + error.text());
+                $('#reply').text("Error");
+			}
+		});
+
+  		$("#HomePage-button").click(function(){
+			window.onbeforeunload = function(e) {
+    		(e || window.event).returnValue = 'Leave site？';
+			}
+			count = 1
+    		$(".main-HomePage").slideToggle();
+			$(".main-questionPage").css("display","block");
+	        
+		});
+
+		$("#check").click(function(){
+			tmp = []			
+			$("#questions p").each(function(){
+				cla = $(this).attr("class");
+				value = $("input[name='" + cla + "']:checked").next("span").text();
+				if(cla != value){
+					console.log($(this).text())
+					tmp.push($(this).text())
+				}
+			})
+			
+			$("#questions").css("display","none");
+			$(".main-questionPage p").css("display","none");
+			$("#check").css("display","none");
+			if(tmp.length != 0){
+				$(".main-questionPage").append("<p> Your get wrong at <span style=\"color:red\">" + tmp.join(", ") + "</span></p>");
+				$(".main-questionPage").append("<p> Please learn them again! </p>");
+			}else{
+				$(".main-questionPage").append("<p> Congrats! All correct! </p>");
+			}
+
+		});
+       
+	});
+	</script>
+</head>
+
+<body>
+	<div class="navigator">
+		<ul>
+			  <li id="Home"><a href="values.html">Test</a></li>
+			  <li><a href="bot.html">Chat Robot</a></li>
+  			<li><a href="News.html">News</a></li>
+		</ul>
+	</div>
+
+    <div class="main-HomePage">
+		<p id="HomePage-title">Hygienic vocabulary test</p>
+		<p id="HomePage-description">AIt is important to learn health vocabulary. Learning health vocabulary can help people learn more about related diseases. If you're ready, click button to begin.</p>
+		<button id="HomePage-button">Take Vocabulary test</button>
+	</div>
+
+	<div class="main-questionPage">
+		<p>Choose what you think is right:</p>
+		<div id="questions"></div>
+		<button id="check" style="margin-left:20%;margin-top:3%;margin-bottom: 3%">Submit your answer</button>   
+	</div>
+
+</div>
+</body>
+	
+</html>

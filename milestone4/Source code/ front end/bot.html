@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>Document</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+      body {
+        background-image: url("WechatIMG1087.jpeg");
+        background-size: cover;
+        height: 100%;
+        width: 100%;
+      }
+
+      .navigator ul {
+        background-color: rgba(179, 179, 179, 0.4);
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        overflow: hidden;
+      }
+      .navigator li {
+        float: left;
+        display: block;
+        width: 33%;
+      }
+      .navigator li a {
+        display: block;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        font-size: 30px;
+        margin-top: 1%;
+        margin-bottom: 1%;
+      }
+      p {
+          color: white;
+      }
+
+      .talk_con{
+            width:600px;
+            height:500px;
+            border:1px solid #666;
+            margin:50px auto 0;
+            background:#f9f9f9;
+        }
+        .talk_show{
+            width:580px;
+            height:420px;
+            border:1px solid #666;
+            background:#fff;
+            margin:10px auto 0;
+            overflow:auto;
+        }
+        .talk_input{
+            width:580px;
+            margin:10px auto 0;
+        }
+        
+        .talk_word{
+            width:460px;
+            height:26px;
+            padding:0px;
+            float:left;
+            margin-left:10px;
+            outline:none;
+            text-indent:10px;
+        }        
+        .talk_sub{
+            width:70px;
+            height:30px;
+            float:left;
+            margin-left:10px;
+        }
+        .atalk{
+           margin:10px; 
+        }
+        .atalk span{
+            display:inline-block;
+            background:#0181cc;
+            border-radius:10px;
+            color:#fff;
+            padding:5px 10px;
+        }
+        .btalk{
+            margin:10px;
+            text-align:right;
+        }
+        .btalk span{
+            display:inline-block;
+            background:#ef8201;
+            border-radius:10px;
+            color:#fff;
+            padding:5px 10px;
+        }
+    </style>
+    <script>
+        count = 0
+        choose = 0
+        secondchoose = "";
+
+      $(function() {
+        $("#talksub").click(function() {
+            if(count == 0){
+          if($("#talkwords").val() == "1"){
+              console.log($('#talkwords').val())
+            $("#words").append("<div class=\"btalk\"><span id=\"bsay\">1</span></div>");
+            $("#words").append("<div class=\"atalk\"><span id=\"asay\">hello!,nice to meet you! You can chat something with me now!</span></div>");
+            $("#talkwords").val("");
+            count += 1
+            choose = 1
+          }else if($("#talkwords").val() == "2"){
+            $("#words").append("<div class=\"btalk\"><span id=\"bsay\">2</span></div>");
+            $("#words").append("<div class=\"atalk\"><span id=\"asay\">Now I will give you some tips of Health knowledge!</span></div>");
+            $("#words").append("<div class=\"atalk\"><span id=\"asay\">1.Common infectious diseases</span></div>");
+            $("#words").append("<div class=\"atalk\"><span id=\"asay\">2.topics of Epidemic prevention</span></div>");
+            $("#talkwords").val("");
+            count += 1
+            choose = 2
+          }else{
+              alert("invalid input!")
+          }
+          }else if(count > 0 && choose ==1){
+            $.ajax({
+            url: "https://bot7940.herokuapp.com/bot",
+            data: $("#talkwords").val(),
+            type: "POST",
+            success: function(response) {
+              console.log("OK: " + response);
+              $("#words").append("<div class=\"btalk\"><span id=\"bsay\">" + $("#talkwords").val() + "</span></div>");
+              $("#words").append("<div class=\"atalk\"><span id=\"asay\">" + response + "</span></div>");
+              $("#talkwords").val("");
+                  
+            },
+            error: function(error) {
+              console.log(error);
+            }
+          });
+
+          }else if(count==1 && choose == 2){
+              if($("#talkwords").val()=="1"){
+                $("#words").append("<div class=\"btalk\"><span id=\"bsay\">1</span></div>");
+              $("#words").append("<div class=\"atalk\"><span id=\"asay\">1.COVID-19\<br\>2.Dengue Fever\<br\>3.Avian Influenza\<br\>4.Middle East Respiratory Syndrome\<br\>5.Ebola Virus Disease</span></div>");
+              $("#talkwords").val("");
+              secondchoose = "1";
+              count += 1
+              }else if($("#talkwords").val()=="2"){
+                $("#words").append("<div class=\"btalk\"><span id=\"bsay\">2</span></div>");
+                $("#words").append("<div class=\"atalk\"><span id=\"asay\">1.Why we wear Mask\<br\>2.Why we use bleach\<br\>3.Hand Hygiene\<br\>4.Diet and Nutrition\<br\>5.how to drink Water healthily</span></div>");
+                $("#talkwords").val("");
+                secondchoose = "2";
+                count += 1
+               }else{
+                   alert("invalid input!")
+               } 
+          }else if(count ==2 && choose == 2){
+              tep = secondchoose + "-" + $("#talkwords").val();
+              console.log(tep);
+              $.ajax({
+            url: "https://bot7940.herokuapp.com/tips",
+            data: tep,
+            type: "POST",
+            success: function(response) {
+              console.log("OK: " + response);
+              $("#words").append("<div class=\"btalk\"><span id=\"bsay\">" + $("#talkwords").val() + "</span></div>");
+              $("#words").append("<div class=\"atalk\"><span id=\"asay\">" + response + "</span></div>");
+              $("#talkwords").val("");
+                  
+            },
+            error: function(error) {
+              console.log(error);
+            }
+          });
+          }
+      });
+      });
+    </script>
+  </head>
+  <body>
+    <div>
+      <div class="navigator">
+        <ul>
+          <li id="Home"><a href="values.html">Test</a></li>
+          <li><a href="bot.html">Chat Robot</a></li>
+          <li><a href="news.html">News</a></li>
+        </ul>
+      </div id="main">
+    </div>
+
+
+    <div class="talk_con">
+            <div class="talk_show" id="words">
+                <div class="atalk"><span id="asay">Hello, I am a sanitation and anti-epidemic robot. You can ask me some words about sanitation and anti-epidemic. 
+                        I will answer you within my ability and I also can give you some tips about health. Because of the limited resources, every time I can only answer 5 questions, 
+                        then I will feel very Sleepy need to have a rest, I hope you can understand.
+                        Now I am learining english now,so sometime may be I will reply you chinese when I have no idea about your
+                        english question hhhhh</span></div>
+                        <div class="atalk"><span id="asay">chat with me press 1 ,recive some tips press2</span></div>
+            </div>
+            <div class="talk_input">
+                <input type="text" class="talk_word" id="talkwords">
+                <input type="button" value="发送" class="talk_sub" id="talksub">
+            </div>
+        </div>
+  </body>
+</html>
